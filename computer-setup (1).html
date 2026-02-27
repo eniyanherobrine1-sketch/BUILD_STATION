@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuildStation — Ultimate PC Setup Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070b0f;
+    --surface: #0d1117;
+    --surface2: #161b22;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7fff6e;
+    --accent4: #c77dff;
+    --text: #e6edf3;
+    --muted: #8b949e;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; font-weight:300; overflow-x:hidden; cursor:none; }
+
+  .cursor { position:fixed; width:10px; height:10px; background:var(--accent); border-radius:50%; pointer-events:none; z-index:9999; mix-blend-mode:screen; }
+  .cursor-ring { position:fixed; width:36px; height:36px; border:1.5px solid var(--accent); border-radius:50%; pointer-events:none; z-index:9998; transition:all 0.18s ease; mix-blend-mode:screen; opacity:.6; }
+
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:1000; opacity:.35; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:500; padding:20px 48px; display:flex; justify-content:space-between; align-items:center; backdrop-filter:blur(16px); border-bottom:1px solid var(--border); background:rgba(7,11,15,0.7); }
+  .nav-brand { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:3px; color:var(--accent); }
+  .nav-links { display:flex; gap:32px; }
+  .nav-links a { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .3s; cursor:none; }
+  .nav-links a:hover { color:var(--accent); }
+
+  .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; padding:100px 24px 60px; }
+  .grid-bg { position:absolute; inset:0; background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px); background-size:60px 60px; animation:gridPan 20s linear infinite; }
+  @keyframes gridPan { 0%{transform:perspective(600px) rotateX(20deg) translateY(0)} 100%{transform:perspective(600px) rotateX(20deg) translateY(60px)} }
+  .orb { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
+  .orb1 { width:600px; height:600px; background:radial-gradient(circle,rgba(0,212,255,.12) 0%,transparent 70%); top:-100px; left:-100px; animation:float1 8s ease-in-out infinite; }
+  .orb2 { width:500px; height:500px; background:radial-gradient(circle,rgba(255,107,53,.1) 0%,transparent 70%); bottom:-80px; right:-80px; animation:float2 10s ease-in-out infinite; }
+  .orb3 { width:400px; height:400px; background:radial-gradient(circle,rgba(199,125,255,.08) 0%,transparent 70%); top:40%; left:60%; animation:float1 12s ease-in-out infinite reverse; }
+  @keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,30px)} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,-40px)} }
+  .hero-badge { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); border:1px solid rgba(0,212,255,.3); padding:6px 16px; border-radius:2px; margin-bottom:32px; animation:fadeUp .8s ease both; position:relative; z-index:2; }
+  .hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(70px,13vw,170px); line-height:.9; text-align:center; position:relative; z-index:2; animation:fadeUp .9s ease .1s both; letter-spacing:2px; }
+  .hero-title .ghost { -webkit-text-stroke:1px rgba(255,255,255,.25); color:transparent; }
+  .hero-title .c-accent { color:var(--accent); }
+  .hero-sub { font-size:16px; color:var(--muted); text-align:center; max-width:520px; margin-top:28px; line-height:1.8; animation:fadeUp 1s ease .2s both; position:relative; z-index:2; }
+  .hero-cta { display:flex; gap:16px; margin-top:48px; animation:fadeUp 1s ease .3s both; position:relative; z-index:2; flex-wrap:wrap; justify-content:center; }
+  .btn { padding:14px 36px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500; text-decoration:none; cursor:none; transition:all .3s; clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px)); display:inline-block; }
+  .btn-primary { background:var(--accent); color:var(--bg); }
+  .btn-primary:hover { background:#fff; transform:translateY(-2px); box-shadow:0 10px 40px rgba(0,212,255,.4); }
+  .btn-outline { background:transparent; color:var(--text); border:1px solid var(--border); }
+  .btn-outline:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
+  .scroll-hint { position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; z-index:2; animation:fadeUp 1s ease .6s both; }
+  .scroll-hint span { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .scroll-line { width:1px; height:60px; background:linear-gradient(to bottom,var(--accent),transparent); animation:scrollLine 2s ease-in-out infinite; }
+  @keyframes scrollLine { 0%,100%{opacity:0;transform:scaleY(0);transform-origin:top} 50%{opacity:1;transform:scaleY(1)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  .stats-bar { border-top:1px solid var(--border); border-bottom:1px solid var(--border); display:grid; grid-template-columns:repeat(5,1fr); }
+  .stat-item { padding:32px 28px; border-right:1px solid var(--border); opacity:0; transform:translateY(20px); transition:all .6s ease; }
+  .stat-item:last-child { border-right:none; }
+  .stat-item.visible { opacity:1; transform:translateY(0); }
+  .stat-num { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--accent); line-height:1; }
+  .stat-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:6px; }
+
+  .marquee-section { overflow:hidden; border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:20px 0; background:var(--surface); }
+  .marquee-track { display:flex; gap:60px; animation:marquee 28s linear infinite; white-space:nowrap; }
+  .marquee-track:hover { animation-play-state:paused; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .marquee-item { display:flex; align-items:center; gap:16px; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; }
+
+  .sec { padding:120px 48px; max-width:1280px; margin:0 auto; }
+  .section-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+  .section-label::before { content:''; display:block; width:30px; height:1px; background:var(--accent); }
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(48px,6vw,80px); line-height:1; margin-bottom:24px; }
+  .section-desc { font-size:15px; color:var(--muted); max-width:560px; line-height:1.8; }
+
+  .usecase-tabs { display:flex; gap:4px; margin:48px 0 0; flex-wrap:wrap; }
+  .tab-btn { padding:12px 24px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; background:var(--surface); border:1px solid var(--border); color:var(--muted); cursor:none; transition:all .3s; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); }
+  .tab-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .tab-btn.active { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+  .usecase-panel { display:none; animation:fadeUp .5s ease both; }
+  .usecase-panel.active { display:block; }
+
+  .uc-header { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; margin:48px 0 40px; padding:48px; background:var(--surface); border:1px solid var(--border); position:relative; overflow:hidden; }
+  .uc-header::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .uc-gaming::before { background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+  .uc-professional::before { background:linear-gradient(90deg,var(--accent4),var(--accent)); }
+  .uc-office::before { background:linear-gradient(90deg,var(--accent3),var(--accent)); }
+  .uc-creative::before { background:linear-gradient(90deg,var(--accent2),var(--accent4)); }
+  .uc-student::before { background:linear-gradient(90deg,var(--accent3),var(--accent2)); }
+  .uc-server::before { background:linear-gradient(90deg,var(--accent),var(--accent3)); }
+  .uc-emoji { font-size:80px; line-height:1; margin-bottom:16px; animation:emojiFloat 3s ease-in-out infinite; display:block; }
+  @keyframes emojiFloat { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
+  .uc-name { font-family:'Bebas Neue',sans-serif; font-size:52px; margin-bottom:12px; letter-spacing:2px; }
+  .uc-tagline { font-size:14px; color:var(--muted); line-height:1.8; }
+  .uc-budget { display:inline-block; margin-top:20px; font-family:'DM Mono',monospace; font-size:13px; padding:8px 20px; border:1px solid var(--border); color:var(--accent3); }
+  .uc-perks { display:flex; flex-direction:column; gap:14px; }
+  .uc-perk { display:flex; align-items:flex-start; gap:12px; font-size:14px; line-height:1.6; color:var(--muted); }
+  .uc-perk::before { content:'◆'; color:var(--accent); font-size:9px; margin-top:5px; flex-shrink:0; }
+
+  .comp-label { display:grid; grid-template-columns:56px 1.6fr 1.2fr 1fr 100px 130px; gap:16px; padding:12px 0 8px; border-bottom:1px solid var(--border); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+  .comp-row { display:grid; grid-template-columns:56px 1.6fr 1.2fr 1fr 100px 130px; gap:16px; align-items:center; padding:18px 0; border-bottom:1px solid var(--border); opacity:0; transform:translateX(-10px); transition:all .5s ease; }
+  .comp-row.visible { opacity:1; transform:translateX(0); }
+  .comp-row:hover { background:rgba(0,212,255,.02); }
+  .comp-icon-sm { width:48px; height:48px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:20px; transition:all .3s; flex-shrink:0; }
+  .comp-row:hover .comp-icon-sm { border-color:var(--accent); box-shadow:0 0 12px rgba(0,212,255,.15); }
+  .comp-info h4 { font-size:14px; font-weight:500; margin-bottom:3px; }
+  .comp-info p { font-size:11px; color:var(--muted); }
+  .comp-model { font-size:13px; color:var(--text); }
+  .comp-spec { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); }
+  .comp-price { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--accent3); }
+  .amz-btn { display:inline-flex; align-items:center; gap:7px; padding:9px 14px; background:#FF9900; color:#111; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:700; text-decoration:none; border-radius:2px; transition:all .3s; cursor:none; white-space:nowrap; }
+  .amz-btn:hover { background:#ffb340; transform:translateY(-1px); box-shadow:0 4px 20px rgba(255,153,0,.4); }
+  .amz-btn svg { width:14px; height:14px; flex-shrink:0; }
+  .total-bar { display:flex; justify-content:space-between; align-items:center; padding:28px 0 8px; border-top:2px solid rgba(0,212,255,.2); margin-top:4px; }
+  .total-label { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+  .total-price { font-family:'Bebas Neue',sans-serif; font-size:42px; color:var(--accent); }
+
+  .steps-bg { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .steps-inner { padding:120px 48px; max-width:1280px; margin:0 auto; }
+  .steps-list { margin-top:60px; }
+  .step-item { display:grid; grid-template-columns:120px 1fr; gap:40px; padding:40px 0; border-bottom:1px solid var(--border); opacity:0; transform:translateY(20px); transition:all .6s ease; align-items:start; }
+  .step-item.visible { opacity:1; transform:translateY(0); }
+  .step-left { text-align:right; }
+  .step-num-big { font-family:'Bebas Neue',sans-serif; font-size:80px; color:rgba(0,212,255,.07); line-height:1; }
+  .step-tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); }
+  .step-title { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:1px; margin-bottom:12px; margin-top:4px; }
+  .step-desc { font-size:14px; color:var(--muted); line-height:1.9; max-width:680px; }
+  .step-tip { margin-top:16px; padding:12px 16px; background:rgba(0,212,255,.04); border-left:2px solid var(--accent); font-size:13px; color:var(--muted); font-style:italic; }
+  .step-tip strong { color:var(--accent); font-style:normal; }
+
+  .compare-wrap { overflow-x:auto; margin-top:48px; }
+  .compare-table { width:100%; border-collapse:collapse; }
+  .compare-table th { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:16px 20px; border-bottom:1px solid var(--border); text-align:left; white-space:nowrap; }
+  .compare-table td { padding:16px 20px; border-bottom:1px solid var(--border); font-size:14px; vertical-align:middle; }
+  .compare-table tr:hover td { background:rgba(0,212,255,.02); }
+  .use-badge { display:inline-block; padding:4px 12px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; border-radius:2px; white-space:nowrap; }
+  .badge-gaming { background:rgba(0,212,255,.1); color:var(--accent); }
+  .badge-pro { background:rgba(199,125,255,.1); color:var(--accent4); }
+  .badge-office { background:rgba(127,255,110,.1); color:var(--accent3); }
+  .badge-creative { background:rgba(255,107,53,.1); color:var(--accent2); }
+  .badge-student { background:rgba(127,255,110,.08); color:var(--accent3); }
+  .check { color:var(--accent3); }
+  .cross { color:rgba(255,255,255,.2); }
+
+  .peripherals-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; margin-top:40px; }
+  .peri-card { background:var(--surface); border:1px solid var(--border); padding:28px; position:relative; overflow:hidden; opacity:0; transform:translateY(20px); transition:all .5s ease; }
+  .peri-card.visible { opacity:1; transform:translateY(0); }
+  .peri-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transform:scaleX(0); transition:transform .4s; }
+  .peri-card:hover::after { transform:scaleX(1); }
+  .peri-icon { font-size:32px; margin-bottom:16px; display:block; }
+  .peri-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:8px; }
+  .peri-desc { font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:16px; }
+  .peri-price { font-family:'DM Mono',monospace; font-size:12px; color:var(--accent3); margin-bottom:14px; }
+  .amz-sm { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:#FF9900; color:#111; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:700; text-decoration:none; border-radius:2px; transition:all .3s; cursor:none; }
+  .amz-sm:hover { background:#ffb340; transform:translateY(-1px); }
+  .amz-sm svg { width:13px; height:13px; }
+
+  .cta-section { text-align:center; padding:160px 48px; position:relative; overflow:hidden; }
+  .cta-bg { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:700px; background:radial-gradient(circle,rgba(0,212,255,.07) 0%,transparent 70%); border-radius:50%; pointer-events:none; animation:ctaPulse 4s ease-in-out infinite; }
+  @keyframes ctaPulse { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.2)} }
+
+  footer { border-top:1px solid var(--border); padding:40px 48px; display:flex; justify-content:space-between; align-items:center; }
+  .footer-brand { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--accent); }
+  .footer-copy { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:1px; }
+
+  @media(max-width:900px) {
+    .stats-bar { grid-template-columns:repeat(3,1fr); }
+    .uc-header { grid-template-columns:1fr; }
+    .comp-label,.comp-row { grid-template-columns:44px 1fr 80px 110px; }
+    .comp-label span:nth-child(4),.comp-row .comp-spec,.comp-label span:nth-child(3),.comp-row .comp-model { display:none; }
+    .steps-inner,.sec { padding:80px 24px; }
+    nav { padding:16px 24px; }
+    .nav-links { display:none; }
+    .step-item { grid-template-columns:80px 1fr; gap:20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-brand">BuildStation</div>
+  <div class="nav-links">
+    <a href="#usecases">Use Cases</a>
+    <a href="#steps">Build Guide</a>
+    <a href="#compare">Compare</a>
+    <a href="#peripherals">Peripherals</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="grid-bg"></div>
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+  <div class="hero-badge">// buildstation — find your perfect pc</div>
+  <h1 class="hero-title">BUILD YOUR<br><span class="ghost">DREAM</span> <span class="c-accent">RIG</span></h1>
+  <p class="hero-sub">Gaming beast, professional powerhouse, budget office workhorse — discover exactly what you need, why you need it, and where to buy it on Amazon.</p>
+  <div class="hero-cta">
+    <a href="#usecases" class="btn btn-primary">Explore Use Cases</a>
+    <a href="#steps" class="btn btn-outline">Build Guide</a>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num" data-target="6">0</div><div class="stat-label">Use Cases</div></div>
+  <div class="stat-item"><div class="stat-num" data-target="40">0</div><div class="stat-label">Components Listed</div></div>
+  <div class="stat-item"><div class="stat-num" data-target="8">0</div><div class="stat-label">Build Steps</div></div>
+  <div class="stat-item"><div class="stat-num" data-target="9">0</div><div class="stat-label">Peripherals Covered</div></div>
+  <div class="stat-item"><div class="stat-num" data-target="100">0</div><div class="stat-label">Amazon Links</div></div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span style="color:var(--accent)">◆</span> Gaming Setup</div>
+    <div class="marquee-item"><span style="color:var(--accent4)">◆</span> Professional Workstation</div>
+    <div class="marquee-item"><span style="color:var(--accent3)">◆</span> Office PC</div>
+    <div class="marquee-item"><span style="color:var(--accent2)">◆</span> Creative Studio</div>
+    <div class="marquee-item"><span style="color:var(--accent3)">◆</span> Student Build</div>
+    <div class="marquee-item"><span style="color:var(--accent)">◆</span> Home Server</div>
+    <div class="marquee-item"><span style="color:var(--accent2)">◆</span> Amazon Verified Links</div>
+    <div class="marquee-item"><span style="color:var(--accent)">◆</span> Gaming Setup</div>
+    <div class="marquee-item"><span style="color:var(--accent4)">◆</span> Professional Workstation</div>
+    <div class="marquee-item"><span style="color:var(--accent3)">◆</span> Office PC</div>
+    <div class="marquee-item"><span style="color:var(--accent2)">◆</span> Creative Studio</div>
+    <div class="marquee-item"><span style="color:var(--accent3)">◆</span> Student Build</div>
+    <div class="marquee-item"><span style="color:var(--accent)">◆</span> Home Server</div>
+    <div class="marquee-item"><span style="color:var(--accent2)">◆</span> Amazon Verified Links</div>
+  </div>
+</div>
+
+<!-- USE CASES -->
+<div class="sec" id="usecases">
+  <div class="section-label">01 — Use Cases</div>
+  <h2 class="section-title">What Are You<br>Building For?</h2>
+  <p class="section-desc">Select your use case to see recommended components, real-world specs, estimated pricing, and direct Amazon links.</p>
+
+  <div class="usecase-tabs">
+    <button class="tab-btn active" onclick="switchTab('gaming',this)">🎮 Gaming</button>
+    <button class="tab-btn" onclick="switchTab('professional',this)">💼 Professional</button>
+    <button class="tab-btn" onclick="switchTab('office',this)">🏢 Office</button>
+    <button class="tab-btn" onclick="switchTab('creative',this)">🎨 Creative</button>
+    <button class="tab-btn" onclick="switchTab('student',this)">🎓 Student</button>
+    <button class="tab-btn" onclick="switchTab('server',this)">🖥️ Home Server</button>
+  </div>
+
+  <!-- GAMING -->
+  <div class="usecase-panel active" id="panel-gaming">
+    <div class="uc-header uc-gaming">
+      <div>
+        <span class="uc-emoji">🎮</span>
+        <div class="uc-name">Gaming Rig</div>
+        <div class="uc-tagline">Built for maximum frame rates, smooth 4K gameplay, and high-refresh-rate displays. The GPU is king here — prioritize it above all else. Pairs great with a 1440p 165Hz or 4K 144Hz monitor.</div>
+        <div class="uc-budget">Estimated Budget: $1,400 – $2,200</div>
+      </div>
+      <div class="uc-perks">
+        <div class="uc-perk">High-end GPU is the #1 priority — drives frame rates more than any other part</div>
+        <div class="uc-perk">Fast DDR5 RAM (6000MHz) reduces CPU bottlenecking and boosts 1% lows</div>
+        <div class="uc-perk">Gen 4 NVMe SSD eliminates loading screens in modern games</div>
+        <div class="uc-perk">360mm AIO cooler keeps CPU cool during marathon sessions</div>
+        <div class="uc-perk">Mesh ATX case with high airflow keeps GPU thermals optimal</div>
+        <div class="uc-perk">850W 80+ Gold PSU handles GPU power spikes safely</div>
+      </div>
+    </div>
+    <div class="comp-label"><span></span><span>Component</span><span>Recommended Model</span><span>Spec Highlight</span><span>Est. Price</span><span>Buy</span></div>
+    <div class="comp-row"><div class="comp-icon-sm">⚡</div><div class="comp-info"><h4>CPU</h4><p>Processor</p></div><div class="comp-model">AMD Ryzen 7 7700X</div><div class="comp-spec">8C/16T · 5.4GHz Boost</div><div class="comp-price">~$299</div><a class="amz-btn" href="https://www.amazon.com/s?k=AMD+Ryzen+7+7700X" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🎮</div><div class="comp-info"><h4>GPU</h4><p>Graphics Card</p></div><div class="comp-model">NVIDIA RTX 4070 Super</div><div class="comp-spec">12GB GDDR6X · DLSS 3.5</div><div class="comp-price">~$599</div><a class="amz-btn" href="https://www.amazon.com/s?k=RTX+4070+Super" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🧩</div><div class="comp-info"><h4>Motherboard</h4><p>AM5 Platform</p></div><div class="comp-model">ASUS ROG Strix B650-A</div><div class="comp-spec">DDR5 · PCIe 5.0 · 4x M.2</div><div class="comp-price">~$229</div><a class="amz-btn" href="https://www.amazon.com/s?k=ASUS+ROG+B650+AM5+motherboard" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💾</div><div class="comp-info"><h4>RAM</h4><p>System Memory</p></div><div class="comp-model">G.Skill Trident Z5 32GB</div><div class="comp-spec">DDR5-6000 · CL30 · 2×16GB</div><div class="comp-price">~$109</div><a class="amz-btn" href="https://www.amazon.com/s?k=G.Skill+Trident+Z5+DDR5+6000+32GB" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💽</div><div class="comp-info"><h4>SSD</h4><p>Primary Storage</p></div><div class="comp-model">Samsung 990 Pro 2TB</div><div class="comp-spec">7,450 MB/s · Gen 4 NVMe</div><div class="comp-price">~$149</div><a class="amz-btn" href="https://www.amazon.com/s?k=Samsung+990+Pro+2TB+NVMe" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">❄️</div><div class="comp-info"><h4>CPU Cooler</h4><p>AIO Liquid</p></div><div class="comp-model">Corsair iCUE H150i Elite</div><div class="comp-spec">360mm · LCD Display · RGB</div><div class="comp-price">~$179</div><a class="amz-btn" href="https://www.amazon.com/s?k=Corsair+H150i+360mm+AIO+cooler" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🔌</div><div class="comp-info"><h4>Power Supply</h4><p>ATX 3.0 Modular</p></div><div class="comp-model">Seasonic Focus GX-850</div><div class="comp-spec">850W · 80+ Gold · Modular</div><div class="comp-price">~$139</div><a class="amz-btn" href="https://www.amazon.com/s?k=Seasonic+Focus+GX+850W+Gold" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🏠</div><div class="comp-info"><h4>Case</h4><p>Mid Tower ATX</p></div><div class="comp-model">Lian Li Lancool 216</div><div class="comp-spec">Mesh front · Dual 160mm fans</div><div class="comp-price">~$99</div><a class="amz-btn" href="https://www.amazon.com/s?k=Lian+Li+Lancool+216+case" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="total-bar"><div class="total-label">Estimated Total Build Cost</div><div class="total-price">~$1,803</div></div>
+  </div>
+
+  <!-- PROFESSIONAL -->
+  <div class="usecase-panel" id="panel-professional">
+    <div class="uc-header uc-professional">
+      <div>
+        <span class="uc-emoji">💼</span>
+        <div class="uc-name">Professional Workstation</div>
+        <div class="uc-tagline">For engineers, architects, data scientists, and developers. Handles simulations, large codebases, VMs, and demanding CAD/ML software. Prioritizes core count, large RAM, and workstation GPU reliability.</div>
+        <div class="uc-budget">Estimated Budget: $2,200 – $4,000</div>
+      </div>
+      <div class="uc-perks">
+        <div class="uc-perk">16-core CPU excels at parallelized tasks — compiling, rendering, simulation</div>
+        <div class="uc-perk">64GB RAM supports multiple VMs, large datasets, and complex dev environments</div>
+        <div class="uc-perk">Workstation GPU for ISV-certified CAD, ML training, GPU compute</div>
+        <div class="uc-perk">ECC-capable platform prevents silent data corruption</div>
+        <div class="uc-perk">Noctua air cooler — quieter and just as effective as AIO for sustained loads</div>
+        <div class="uc-perk">Platinum-rated PSU saves power costs for workstations running long sessions daily</div>
+      </div>
+    </div>
+    <div class="comp-label"><span></span><span>Component</span><span>Recommended Model</span><span>Spec Highlight</span><span>Est. Price</span><span>Buy</span></div>
+    <div class="comp-row"><div class="comp-icon-sm">⚡</div><div class="comp-info"><h4>CPU</h4><p>High Core Count</p></div><div class="comp-model">AMD Ryzen 9 7950X</div><div class="comp-spec">16C/32T · 5.7GHz · 64MB L3</div><div class="comp-price">~$549</div><a class="amz-btn" href="https://www.amazon.com/s?k=AMD+Ryzen+9+7950X" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🖥️</div><div class="comp-info"><h4>GPU</h4><p>Workstation Card</p></div><div class="comp-model">NVIDIA RTX 4000 Ada Gen</div><div class="comp-spec">20GB GDDR6 · ECC · ISV Cert.</div><div class="comp-price">~$1,249</div><a class="amz-btn" href="https://www.amazon.com/s?k=NVIDIA+RTX+4000+Ada+workstation" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🧩</div><div class="comp-info"><h4>Motherboard</h4><p>AM5 Workstation</p></div><div class="comp-model">ASUS Pro WS X670E-ACE</div><div class="comp-spec">ECC · 4x PCIe · 10GbE LAN</div><div class="comp-price">~$499</div><a class="amz-btn" href="https://www.amazon.com/s?k=ASUS+Pro+WS+X670E+ACE" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💾</div><div class="comp-info"><h4>RAM</h4><p>System Memory</p></div><div class="comp-model">Corsair Vengeance DDR5 64GB</div><div class="comp-spec">DDR5-5600 · 2×32GB Kit</div><div class="comp-price">~$189</div><a class="amz-btn" href="https://www.amazon.com/s?k=Corsair+Vengeance+DDR5+64GB+5600" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💽</div><div class="comp-info"><h4>SSD</h4><p>OS + Projects</p></div><div class="comp-model">WD Black SN850X 4TB</div><div class="comp-spec">7,300 MB/s · Gen 4 NVMe</div><div class="comp-price">~$299</div><a class="amz-btn" href="https://www.amazon.com/s?k=WD+Black+SN850X+4TB+NVMe" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">❄️</div><div class="comp-info"><h4>CPU Cooler</h4><p>Silent Air Tower</p></div><div class="comp-model">Noctua NH-D15</div><div class="comp-spec">Dual tower · Ultra-quiet · 165W</div><div class="comp-price">~$99</div><a class="amz-btn" href="https://www.amazon.com/s?k=Noctua+NH-D15+CPU+cooler" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🔌</div><div class="comp-info"><h4>Power Supply</h4><p>Platinum Modular</p></div><div class="comp-model">be quiet! Straight Power 12</div><div class="comp-spec">1000W · 80+ Platinum · Modular</div><div class="comp-price">~$189</div><a class="amz-btn" href="https://www.amazon.com/s?k=be+quiet+Straight+Power+12+1000W" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🏠</div><div class="comp-info"><h4>Case</h4><p>Full Tower ATX</p></div><div class="comp-model">Fractal Design Define 7</div><div class="comp-spec">Soundproofed · Excellent airflow</div><div class="comp-price">~$179</div><a class="amz-btn" href="https://www.amazon.com/s?k=Fractal+Design+Define+7+case" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="total-bar"><div class="total-label">Estimated Total Build Cost</div><div class="total-price">~$3,252</div></div>
+  </div>
+
+  <!-- OFFICE -->
+  <div class="usecase-panel" id="panel-office">
+    <div class="uc-header uc-office">
+      <div>
+        <span class="uc-emoji">🏢</span>
+        <div class="uc-name">Office Workhorse</div>
+        <div class="uc-tagline">Reliable, quiet, and efficient. Handles spreadsheets, video calls, document management, and light multitasking flawlessly. No GPU needed — skip it entirely and save hundreds. The smartest bang-for-buck build here.</div>
+        <div class="uc-budget">Estimated Budget: $450 – $800</div>
+      </div>
+      <div class="uc-perks">
+        <div class="uc-perk">Integrated graphics handle all office tasks — skip the dedicated GPU entirely</div>
+        <div class="uc-perk">16GB RAM handles dozens of browser tabs, Office apps, and Zoom calls</div>
+        <div class="uc-perk">Quiet cooler and solid case keeps noise minimal in shared workspaces</div>
+        <div class="uc-perk">500GB–1TB SSD is sufficient — offload bulk files to cloud or NAS</div>
+        <div class="uc-perk">Micro-ATX compact footprint saves valuable desk and under-desk space</div>
+        <div class="uc-perk">Intel 13th gen iGPU supports 2–4 external monitors via DisplayPort/HDMI</div>
+      </div>
+    </div>
+    <div class="comp-label"><span></span><span>Component</span><span>Recommended Model</span><span>Spec Highlight</span><span>Est. Price</span><span>Buy</span></div>
+    <div class="comp-row"><div class="comp-icon-sm">⚡</div><div class="comp-info"><h4>CPU</h4><p>w/ Integrated Graphics</p></div><div class="comp-model">Intel Core i5-13400</div><div class="comp-spec">10C · UHD 730 iGPU · 65W TDP</div><div class="comp-price">~$189</div><a class="amz-btn" href="https://www.amazon.com/s?k=Intel+Core+i5-13400+processor" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🧩</div><div class="comp-info"><h4>Motherboard</h4><p>Micro-ATX LGA1700</p></div><div class="comp-model">MSI Pro B760M-A WiFi</div><div class="comp-spec">DDR5 · Display outputs · WiFi 6</div><div class="comp-price">~$109</div><a class="amz-btn" href="https://www.amazon.com/s?k=MSI+Pro+B760M+A+DDR5+WIFI" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💾</div><div class="comp-info"><h4>RAM</h4><p>System Memory</p></div><div class="comp-model">Kingston Fury Beast 16GB</div><div class="comp-spec">DDR5-5200 · 2×8GB Kit</div><div class="comp-price">~$59</div><a class="amz-btn" href="https://www.amazon.com/s?k=Kingston+Fury+Beast+DDR5+16GB" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💽</div><div class="comp-info"><h4>SSD</h4><p>Boot + Documents</p></div><div class="comp-model">Crucial P3 Plus 1TB</div><div class="comp-spec">5,000 MB/s · Gen 4 NVMe</div><div class="comp-price">~$65</div><a class="amz-btn" href="https://www.amazon.com/s?k=Crucial+P3+Plus+1TB+NVMe" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">❄️</div><div class="comp-info"><h4>CPU Cooler</h4><p>Quiet Budget Air</p></div><div class="comp-model">Thermalright Assassin X120 SE</div><div class="comp-spec">120mm · Near-silent · PWM</div><div class="comp-price">~$22</div><a class="amz-btn" href="https://www.amazon.com/s?k=Thermalright+Assassin+X120+SE" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🔌</div><div class="comp-info"><h4>Power Supply</h4><p>Semi-Modular</p></div><div class="comp-model">EVGA 550 BQ</div><div class="comp-spec">550W · 80+ Bronze · Semi-mod</div><div class="comp-price">~$69</div><a class="amz-btn" href="https://www.amazon.com/s?k=EVGA+550+BQ+power+supply" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🏠</div><div class="comp-info"><h4>Case</h4><p>Compact Micro-ATX</p></div><div class="comp-model">Fractal Design Pop Mini</div><div class="comp-spec">Compact · Clean · Quiet panels</div><div class="comp-price">~$79</div><a class="amz-btn" href="https://www.amazon.com/s?k=Fractal+Design+Pop+Mini+case" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="total-bar"><div class="total-label">Estimated Total Build Cost</div><div class="total-price">~$593</div></div>
+  </div>
+
+  <!-- CREATIVE -->
+  <div class="usecase-panel" id="panel-creative">
+    <div class="uc-header uc-creative">
+      <div>
+        <span class="uc-emoji">🎨</span>
+        <div class="uc-name">Creative Studio</div>
+        <div class="uc-tagline">For video editors, motion designers, 3D artists, and photographers. Balanced CPU+GPU with massive RAM for large project files. Handles 4K/8K video, Blender, Unreal Engine, and DaVinci Resolve with room to spare.</div>
+        <div class="uc-budget">Estimated Budget: $1,800 – $3,200</div>
+      </div>
+      <div class="uc-perks">
+        <div class="uc-perk">Strong CPU+GPU balance — video encoding hammers both simultaneously</div>
+        <div class="uc-perk">64GB RAM handles Premiere Pro 4K timelines, Blender scenes, huge PSD files</div>
+        <div class="uc-perk">NVIDIA GPU preferred for CUDA in Adobe and DaVinci Resolve</div>
+        <div class="uc-perk">Large NVMe + archival HDD: fast scratch disk + mass media storage</div>
+        <div class="uc-perk">Thunderbolt 4 port for fast external drive client deliverables</div>
+        <div class="uc-perk">Intel Quick Sync accelerates hardware video encoding dramatically</div>
+      </div>
+    </div>
+    <div class="comp-label"><span></span><span>Component</span><span>Recommended Model</span><span>Spec Highlight</span><span>Est. Price</span><span>Buy</span></div>
+    <div class="comp-row"><div class="comp-icon-sm">⚡</div><div class="comp-info"><h4>CPU</h4><p>High Core Count</p></div><div class="comp-model">Intel Core i9-14900K</div><div class="comp-spec">24C/32T · 6.0GHz · Quick Sync</div><div class="comp-price">~$469</div><a class="amz-btn" href="https://www.amazon.com/s?k=Intel+Core+i9-14900K" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🎨</div><div class="comp-info"><h4>GPU</h4><p>CUDA + VRAM Power</p></div><div class="comp-model">NVIDIA RTX 4080 Super</div><div class="comp-spec">16GB GDDR6X · CUDA · AV1 Enc.</div><div class="comp-price">~$999</div><a class="amz-btn" href="https://www.amazon.com/s?k=NVIDIA+RTX+4080+Super" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🧩</div><div class="comp-info"><h4>Motherboard</h4><p>Z790 with Thunderbolt</p></div><div class="comp-model">MSI MEG Z790 Ace</div><div class="comp-spec">Thunderbolt 4 · 5x M.2 · WiFi 6E</div><div class="comp-price">~$489</div><a class="amz-btn" href="https://www.amazon.com/s?k=MSI+MEG+Z790+ACE+motherboard" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💾</div><div class="comp-info"><h4>RAM</h4><p>System Memory</p></div><div class="comp-model">G.Skill Ripjaws S5 64GB</div><div class="comp-spec">DDR5-6000 · 2×32GB</div><div class="comp-price">~$199</div><a class="amz-btn" href="https://www.amazon.com/s?k=G.Skill+Ripjaws+S5+DDR5+64GB" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💽</div><div class="comp-info"><h4>Scratch SSD</h4><p>Active Projects</p></div><div class="comp-model">Seagate FireCuda 530 4TB</div><div class="comp-spec">7,300 MB/s · Gen 4 NVMe</div><div class="comp-price">~$329</div><a class="amz-btn" href="https://www.amazon.com/s?k=Seagate+FireCuda+530+4TB+NVMe" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💿</div><div class="comp-info"><h4>Archive HDD</h4><p>Media Library</p></div><div class="comp-model">Seagate IronWolf 8TB</div><div class="comp-spec">7200 RPM · NAS-grade CMR</div><div class="comp-price">~$149</div><a class="amz-btn" href="https://www.amazon.com/s?k=Seagate+IronWolf+8TB+HDD" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">❄️</div><div class="comp-info"><h4>CPU Cooler</h4><p>360mm AIO</p></div><div class="comp-model">ARCTIC Liquid Freezer III 360</div><div class="comp-spec">360mm · VRM fan included</div><div class="comp-price">~$129</div><a class="amz-btn" href="https://www.amazon.com/s?k=ARCTIC+Liquid+Freezer+III+360" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🔌</div><div class="comp-info"><h4>Power Supply</h4><p>80+ Platinum Modular</p></div><div class="comp-model">Corsair RM1000x Shift</div><div class="comp-spec">1000W · Platinum · Side connectors</div><div class="comp-price">~$199</div><a class="amz-btn" href="https://www.amazon.com/s?k=Corsair+RM1000x+Shift+modular" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="total-bar"><div class="total-label">Estimated Total Build Cost</div><div class="total-price">~$2,962</div></div>
+  </div>
+
+  <!-- STUDENT -->
+  <div class="usecase-panel" id="panel-student">
+    <div class="uc-header uc-student">
+      <div>
+        <span class="uc-emoji">🎓</span>
+        <div class="uc-name">Student Build</div>
+        <div class="uc-tagline">Handles coursework, research, coding, light gaming, and streaming on a tight budget. Uses an AMD APU (CPU with integrated Vega graphics) so no dedicated GPU is needed initially. Upgradeable as needs grow.</div>
+        <div class="uc-budget">Estimated Budget: $350 – $650</div>
+      </div>
+      <div class="uc-perks">
+        <div class="uc-perk">AMD Ryzen 5600G APU runs light games at 720p/1080p without a GPU</div>
+        <div class="uc-perk">Add a GPU (RX 6600 or RTX 3060) later as your budget grows</div>
+        <div class="uc-perk">16GB RAM handles programming, browsing, and multitasking smoothly</div>
+        <div class="uc-perk">512GB SSD is sufficient — store large files on Google Drive or external HDD</div>
+        <div class="uc-perk">Small compact case fits tight dorm room and shared desk setups</div>
+        <div class="uc-perk">AM4 platform is mature and affordable — huge used parts market for upgrades</div>
+      </div>
+    </div>
+    <div class="comp-label"><span></span><span>Component</span><span>Recommended Model</span><span>Spec Highlight</span><span>Est. Price</span><span>Buy</span></div>
+    <div class="comp-row"><div class="comp-icon-sm">⚡</div><div class="comp-info"><h4>CPU/APU</h4><p>w/ Integrated Vega GPU</p></div><div class="comp-model">AMD Ryzen 5 5600G</div><div class="comp-spec">6C · Radeon Vega 7 iGPU</div><div class="comp-price">~$119</div><a class="amz-btn" href="https://www.amazon.com/s?k=AMD+Ryzen+5+5600G+APU" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🧩</div><div class="comp-info"><h4>Motherboard</h4><p>AM4 Micro-ATX</p></div><div class="comp-model">MSI B550M PRO-VDH WiFi</div><div class="comp-spec">Display outputs · PCIe · WiFi</div><div class="comp-price">~$89</div><a class="amz-btn" href="https://www.amazon.com/s?k=MSI+B550M+PRO-VDH+WIFI+motherboard" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💾</div><div class="comp-info"><h4>RAM</h4><p>System Memory</p></div><div class="comp-model">Corsair Vengeance 16GB</div><div class="comp-spec">DDR4-3200 · 2×8GB Kit</div><div class="comp-price">~$44</div><a class="amz-btn" href="https://www.amazon.com/s?k=Corsair+Vengeance+DDR4+3200+16GB" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💽</div><div class="comp-info"><h4>SSD</h4><p>Boot + Study Files</p></div><div class="comp-model">Silicon Power P34A60 512GB</div><div class="comp-spec">2,200 MB/s · Gen 3 NVMe</div><div class="comp-price">~$39</div><a class="amz-btn" href="https://www.amazon.com/s?k=Silicon+Power+512GB+NVMe+M.2+SSD" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">❄️</div><div class="comp-info"><h4>CPU Cooler</h4><p>Bundled Stock</p></div><div class="comp-model">AMD Wraith Stealth</div><div class="comp-spec">Included with 5600G · Free</div><div class="comp-price">Free</div><a class="amz-btn" href="https://www.amazon.com/s?k=AMD+Ryzen+5+5600G" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🔌</div><div class="comp-info"><h4>Power Supply</h4><p>Budget + Future GPU</p></div><div class="comp-model">Thermaltake Smart 650W</div><div class="comp-spec">650W · 80+ White · GPU ready</div><div class="comp-price">~$55</div><a class="amz-btn" href="https://www.amazon.com/s?k=Thermaltake+Smart+650W+PSU" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🏠</div><div class="comp-info"><h4>Case</h4><p>Budget Micro-ATX</p></div><div class="comp-model">Cooler Master Q300L</div><div class="comp-spec">Acrylic panel · Compact · Budget</div><div class="comp-price">~$49</div><a class="amz-btn" href="https://www.amazon.com/s?k=Cooler+Master+MasterBox+Q300L" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="total-bar"><div class="total-label">Estimated Total Build Cost</div><div class="total-price">~$395</div></div>
+  </div>
+
+  <!-- SERVER -->
+  <div class="usecase-panel" id="panel-server">
+    <div class="uc-header uc-server">
+      <div>
+        <span class="uc-emoji">🖥️</span>
+        <div class="uc-name">Home Server / NAS</div>
+        <div class="uc-tagline">Run Plex, Nextcloud, Pi-hole, game servers, and self-hosted apps 24/7. Designed for energy efficiency, massive storage expansion, and always-on uptime. Low power draw keeps electricity bills minimal year-round.</div>
+        <div class="uc-budget">Estimated Budget: $600 – $1,200</div>
+      </div>
+      <div class="uc-perks">
+        <div class="uc-perk">Low TDP processor minimizes power draw across continuous 24/7 operation</div>
+        <div class="uc-perk">ECC memory prevents silent bit flips — critical for always-on file storage</div>
+        <div class="uc-perk">6+ SATA ports for large hard drive arrays in RAID 1/5/10 configurations</div>
+        <div class="uc-perk">10GbE network card enables fast transfers across all LAN devices</div>
+        <div class="uc-perk">iGPU provides Plex hardware transcoding without a dedicated GPU</div>
+        <div class="uc-perk">NAS-grade drives (CMR only) with vibration compensation survive years in arrays</div>
+      </div>
+    </div>
+    <div class="comp-label"><span></span><span>Component</span><span>Recommended Model</span><span>Spec Highlight</span><span>Est. Price</span><span>Buy</span></div>
+    <div class="comp-row"><div class="comp-icon-sm">⚡</div><div class="comp-info"><h4>CPU</h4><p>Low Power + iGPU</p></div><div class="comp-model">Intel Core i3-12100</div><div class="comp-spec">4C/8T · UHD 730 · 60W TDP</div><div class="comp-price">~$99</div><a class="amz-btn" href="https://www.amazon.com/s?k=Intel+Core+i3-12100+processor" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🧩</div><div class="comp-info"><h4>Motherboard</h4><p>Multi-SATA mATX</p></div><div class="comp-model">ASRock B660M Pro RS</div><div class="comp-spec">6x SATA · M.2 · Display output</div><div class="comp-price">~$109</div><a class="amz-btn" href="https://www.amazon.com/s?k=ASRock+B660M+Pro+RS+motherboard" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💾</div><div class="comp-info"><h4>RAM</h4><p>ECC Unbuffered</p></div><div class="comp-model">Kingston Server Premier 32GB</div><div class="comp-spec">DDR4-3200 ECC Unbuffered</div><div class="comp-price">~$79</div><a class="amz-btn" href="https://www.amazon.com/s?k=Kingston+Server+Premier+ECC+DDR4+32GB" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💽</div><div class="comp-info"><h4>OS SSD</h4><p>System Drive</p></div><div class="comp-model">Samsung 870 EVO 500GB</div><div class="comp-spec">SATA SSD · High endurance</div><div class="comp-price">~$59</div><a class="amz-btn" href="https://www.amazon.com/s?k=Samsung+870+EVO+500GB+SATA" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">💿</div><div class="comp-info"><h4>Storage Array (×2)</h4><p>NAS Media Drives</p></div><div class="comp-model">WD Red Plus 8TB ×2</div><div class="comp-spec">NAS-optimized · CMR · RAID</div><div class="comp-price">~$298</div><a class="amz-btn" href="https://www.amazon.com/s?k=WD+Red+Plus+8TB+NAS+hard+drive" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🌐</div><div class="comp-info"><h4>Network Card</h4><p>10GbE LAN</p></div><div class="comp-model">Intel X550-T1 10GbE</div><div class="comp-spec">PCIe · 10Gb/s LAN</div><div class="comp-price">~$149</div><a class="amz-btn" href="https://www.amazon.com/s?k=Intel+X550-T1+10GbE+PCIe+NIC" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🔌</div><div class="comp-info"><h4>Power Supply</h4><p>High Efficiency</p></div><div class="comp-model">Seasonic Focus GX-550</div><div class="comp-spec">550W · 80+ Gold · Fanless idle</div><div class="comp-price">~$99</div><a class="amz-btn" href="https://www.amazon.com/s?k=Seasonic+Focus+GX+550W+Gold" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="comp-row"><div class="comp-icon-sm">🏠</div><div class="comp-info"><h4>Case</h4><p>Drive-Bay Tower</p></div><div class="comp-model">Fractal Design Node 804</div><div class="comp-spec">8x HDD bays · mATX · Quiet</div><div class="comp-price">~$109</div><a class="amz-btn" href="https://www.amazon.com/s?k=Fractal+Design+Node+804+case" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Amazon</a></div>
+    <div class="total-bar"><div class="total-label">Estimated Total Build Cost</div><div class="total-price">~$1,001</div></div>
+  </div>
+</div>
+
+<!-- BUILD STEPS -->
+<div class="steps-bg" id="steps">
+  <div class="steps-inner">
+    <div class="section-label">02 — Assembly</div>
+    <h2 class="section-title">The 8-Step<br>Build Process</h2>
+    <p class="section-desc">Follow this sequence every time. Order matters — skipping steps is the #1 cause of failed first boots.</p>
+    <div class="steps-list">
+      <div class="step-item"><div class="step-left"><div class="step-num-big">01</div><div class="step-tag">Prep</div></div><div><div class="step-title">Prepare Workspace & Tools</div><div class="step-desc">Clear a large static-safe surface. Lay out all components still in anti-static bags. Gather: Phillips #2 screwdriver, thermal paste, anti-static strap, and zip ties. Clip the strap to an unpainted metal surface before touching anything. Good lighting is non-negotiable.</div><div class="step-tip"><strong>Pro Tip:</strong> Build on a wooden table, never carpet. Carpet generates static electricity that invisibly kills components.</div></div></div>
+      <div class="step-item"><div class="step-left"><div class="step-num-big">02</div><div class="step-tag">CPU</div></div><div><div class="step-title">Install CPU onto Motherboard</div><div class="step-desc">Open the CPU socket latch. Align the gold triangle on the CPU corner with the triangle on the socket. Lower it gently — it drops by gravity alone. Never press or force. Intel: lower the ILM bracket. AMD: no extra latch. Inspect for bent pins before proceeding.</div><div class="step-tip"><strong>Pro Tip:</strong> Bent pins mean a dead board or CPU. If it doesn't seat instantly, lift and realign — never force it.</div></div></div>
+      <div class="step-item"><div class="step-left"><div class="step-num-big">03</div><div class="step-tag">RAM</div></div><div><div class="step-title">Seat RAM in Dual-Channel Slots</div><div class="step-desc">Check your manual for the correct dual-channel slots — usually A2 and B2, not A1 and A2. Open both retention clips, align the RAM notch with the slot key, and press firmly and evenly until both clips snap shut. RAM only seats in one direction — the notch prevents reversal.</div><div class="step-tip"><strong>Pro Tip:</strong> Enable XMP (Intel) or EXPO (AMD) in BIOS after build to unlock your RAM's advertised speed.</div></div></div>
+      <div class="step-item"><div class="step-left"><div class="step-num-big">04</div><div class="step-tag">SSD</div></div><div><div class="step-title">Install M.2 NVMe SSD</div><div class="step-desc">Remove the M.2 heatsink if present. Insert the SSD at a 30° angle into the slot and slide forward until it clicks. Press down flat and fasten the retaining screw. Replace the heatsink. For multiple drives, fill the primary slot (closest to CPU) first for maximum bandwidth.</div><div class="step-tip"><strong>Pro Tip:</strong> Some M.2 slots share bandwidth with SATA ports — check your manual to avoid accidentally disabling drives.</div></div></div>
+      <div class="step-item"><div class="step-left"><div class="step-num-big">05</div><div class="step-tag">Cooler</div></div><div><div class="step-title">Apply Thermal Paste & Mount Cooler</div><div class="step-desc">Apply one pea-sized drop of paste to the center of the CPU heat spreader. Do not pre-spread — it distributes under mounting pressure. For AIO coolers, mount the pump head first, route tubing, then mount the radiator. Tighten cooler screws in a cross-pattern to apply even pressure.</div><div class="step-tip"><strong>Pro Tip:</strong> More thermal paste is never better. A pea-sized dot spreads perfectly. Excess causes overflow and shorting.</div></div></div>
+      <div class="step-item"><div class="step-left"><div class="step-num-big">06</div><div class="step-tag">Case</div></div><div><div class="step-title">Mount Motherboard in Case</div><div class="step-desc">Install brass standoffs matching your board size (ATX, mATX, ITX). Snap the I/O shield into the rear cutout. Lower the board in, align ports with the shield, and start all standoff screws loosely. Tighten them in a cross-pattern. Every standoff hole must have a screw — missing ones cause flex and damage.</div><div class="step-tip"><strong>Pro Tip:</strong> Misaligned standoffs will short your motherboard instantly. Verify all hole positions before powering on.</div></div></div>
+      <div class="step-item"><div class="step-left"><div class="step-num-big">07</div><div class="step-tag">Power + GPU</div></div><div><div class="step-title">Install PSU, GPU & Route Cables</div><div class="step-desc">Mount the PSU fan-down in most modern cases. Install the GPU into the primary PCIe x16 slot until it clicks. Route all cables behind the tray before plugging in: 24-pin ATX, 8-pin CPU EPS, PCIe power to GPU, SATA to drives, fan headers to board. Use velcro ties for management — cleaner and reusable.</div><div class="step-tip"><strong>Pro Tip:</strong> Don't close the case yet. Test with side panel off first to catch issues without disassembly.</div></div></div>
+      <div class="step-item"><div class="step-left"><div class="step-num-big">08</div><div class="step-tag">OS Boot</div></div><div><div class="step-title">First Boot, BIOS Setup & OS Install</div><div class="step-desc">Connect monitor, keyboard, power. Press the power button — if fans spin and BIOS loads, you've succeeded. Enter BIOS (usually DEL or F2) and enable XMP/EXPO, verify boot order, check temperatures. Create a Windows 11 or Linux USB on another machine, boot from it, and install. Run chipset and GPU drivers immediately after.</div><div class="step-tip"><strong>Pro Tip:</strong> No display on first boot? Reseat RAM first. 90% of first-boot failures are caused by loose RAM sticks.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARISON -->
+<div class="sec" id="compare">
+  <div class="section-label">03 — Compare All Builds</div>
+  <h2 class="section-title">Which Build<br>Is Right for You?</h2>
+  <p class="section-desc">A quick comparison across all six builds. Use this to confirm your choice before purchasing any components.</p>
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead><tr><th>Use Case</th><th>Budget Range</th><th>Gaming</th><th>Video Editing</th><th>Dev / Coding</th><th>Office Work</th><th>GPU Required?</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td><span class="use-badge badge-gaming">🎮 Gaming</span></td><td>$1,400–$2,200</td><td><span class="check">✦ 4K/144Hz</span></td><td><span class="check">✦ Basic</span></td><td><span class="check">✓ Good</span></td><td><span class="check">✓</span></td><td><span class="check">Yes — High-End GPU</span></td><td>Serious gamers &amp; streamers</td></tr>
+        <tr><td><span class="use-badge badge-pro">💼 Professional</span></td><td>$2,200–$4,000</td><td><span class="check">✦ Good</span></td><td><span class="check">✦ 4K/8K</span></td><td><span class="check">✦ Excellent</span></td><td><span class="check">✓</span></td><td><span class="check">Yes — Workstation GPU</span></td><td>Engineers &amp; data scientists</td></tr>
+        <tr><td><span class="use-badge badge-office">🏢 Office</span></td><td>$450–$800</td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="check">✦ Light dev</span></td><td><span class="check">✦ Excellent</span></td><td><span style="color:var(--accent3)">No — iGPU only</span></td><td>Business professionals</td></tr>
+        <tr><td><span class="use-badge badge-creative">🎨 Creative</span></td><td>$1,800–$3,200</td><td><span class="check">✦ Good</span></td><td><span class="check">✦ 4K/8K</span></td><td><span class="check">✓ Good</span></td><td><span class="check">✓</span></td><td><span class="check">Yes — NVIDIA CUDA</span></td><td>Video editors &amp; 3D artists</td></tr>
+        <tr><td><span class="use-badge badge-student">🎓 Student</span></td><td>$350–$650</td><td><span class="check">✦ Light 720p</span></td><td><span class="cross">✗</span></td><td><span class="check">✦ Good</span></td><td><span class="check">✓</span></td><td><span style="color:var(--accent3)">No — Upgrade later</span></td><td>Students on a budget</td></tr>
+        <tr><td><span class="use-badge badge-office">🖥️ Home Server</span></td><td>$600–$1,200</td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="check">✦ Self-hosting</span></td><td><span class="cross">✗</span></td><td><span style="color:var(--accent3)">No — iGPU only</span></td><td>Tech enthusiasts &amp; home labs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PERIPHERALS -->
+<div class="steps-bg" id="peripherals">
+  <div class="sec">
+    <div class="section-label">04 — Peripherals</div>
+    <h2 class="section-title">Complete Your<br>Setup</h2>
+    <p class="section-desc">The right peripherals transform a good PC into a great workstation. Here's what to pair with each build type.</p>
+    <div class="peripherals-grid">
+      <div class="peri-card"><span class="peri-icon">🖥️</span><div class="peri-name">Gaming Monitor</div><div class="peri-desc">For gaming builds: 1440p 165Hz+ IPS panel. LG 27GP850-B or Samsung Odyssey G5 are top picks under $300. G-Sync/FreeSync eliminates screen tearing entirely.</div><div class="peri-price">$249 – $399</div><a class="amz-sm" href="https://www.amazon.com/s?k=1440p+165hz+gaming+monitor+IPS+gsync" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">🎯</span><div class="peri-name">Gaming Mouse</div><div class="peri-desc">Logitech G Pro X Superlight 2 or Razer DeathAdder V3. Lightweight wireless with sub-1ms response. Essential for competitive gaming precision.</div><div class="peri-price">$79 – $159</div><a class="amz-sm" href="https://www.amazon.com/s?k=gaming+mouse+lightweight+wireless+logitech" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">⌨️</span><div class="peri-name">Mechanical Keyboard</div><div class="peri-desc">Keychron Q2 for enthusiasts, K8 Pro for portability. Tactile brown switches for balanced typing/gaming. Tenkeyless saves valuable desk real estate.</div><div class="peri-price">$69 – $179</div><a class="amz-sm" href="https://www.amazon.com/s?k=keychron+mechanical+keyboard+TKL" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">🔊</span><div class="peri-name">Headset / Headphones</div><div class="peri-desc">Gaming: SteelSeries Arctis Nova Pro Wireless. Creative/Professional: Beyerdynamic DT 700 Pro X for flat, accurate monitoring. Both under $300.</div><div class="peri-price">$99 – $299</div><a class="amz-sm" href="https://www.amazon.com/s?k=SteelSeries+Arctis+Nova+Pro+Wireless" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">🎙️</span><div class="peri-name">USB Microphone</div><div class="peri-desc">Blue Yeti X or Elgato Wave:3 for streaming, Zoom calls, and recording. Add a boom arm to position correctly and filter desk vibration noise.</div><div class="peri-price">$99 – $149</div><a class="amz-sm" href="https://www.amazon.com/s?k=Blue+Yeti+X+USB+condenser+microphone" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">📷</span><div class="peri-name">Webcam</div><div class="peri-desc">Logitech C920S for reliable 1080p calls. Elgato Facecam for content creators. Sony ZV-E10 via USB as a mirrorless webcam is the gold standard for streaming.</div><div class="peri-price">$79 – $399</div><a class="amz-sm" href="https://www.amazon.com/s?k=Logitech+C920S+1080p+HD+webcam" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">🪑</span><div class="peri-name">Ergonomic Chair</div><div class="peri-desc">Don't cheap out here. Secretlab Titan or Herman Miller Aeron. Your long-term back health depends on this purchase far more than any monitor or keyboard ever will.</div><div class="peri-price">$399 – $1,499</div><a class="amz-sm" href="https://www.amazon.com/s?k=Secretlab+Titan+Evo+gaming+chair" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">💡</span><div class="peri-name">Desk LED Lighting</div><div class="peri-desc">Govee or Elgato Key Light for content creators. Bias LED strips behind your monitor reduce eye strain significantly during night sessions. 6500K matches daylight.</div><div class="peri-price">$29 – $199</div><a class="amz-sm" href="https://www.amazon.com/s?k=Govee+LED+desk+monitor+backlighting" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+      <div class="peri-card"><span class="peri-icon">🔋</span><div class="peri-name">UPS Battery Backup</div><div class="peri-desc">Critical for server and professional builds. APC Back-UPS Pro 1500VA provides 20–40 min of uptime during outages — preventing data corruption and hardware damage.</div><div class="peri-price">$149 – $249</div><a class="amz-sm" href="https://www.amazon.com/s?k=APC+Back-UPS+Pro+1500VA+battery+backup" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>Find on Amazon</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="section-label" style="justify-content:center">05 — Start Building</div>
+  <h2 class="section-title" style="font-size:clamp(56px,9vw,120px)">Ready to<br><span style="color:var(--accent)">Build?</span></h2>
+  <p style="color:var(--muted);max-width:480px;margin:24px auto;font-size:15px;line-height:1.9;">Pick your use case, click through to Amazon, and start adding to cart. Every expert builder started exactly where you are right now.</p>
+  <a href="#usecases" class="btn btn-primary" style="margin-top:24px;font-size:15px;padding:16px 48px;">Choose Your Build ↑</a>
+</div>
+
+<footer>
+  <div class="footer-brand">BuildStation</div>
+  <div class="footer-copy">// PC builds for every purpose &amp; every budget · 2025</div>
+</footer>
+
+<script>
+// Cursor
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function animCursor(){cursor.style.left=mx-5+'px';cursor.style.top=my-5+'px';rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx-18+'px';ring.style.top=ry-18+'px';requestAnimationFrame(animCursor);})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.transform='scale(1.8)';ring.style.borderColor='var(--accent2)';});
+  el.addEventListener('mouseleave',()=>{ring.style.transform='scale(1)';ring.style.borderColor='var(--accent)';});
+});
+
+// Tab switching
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.usecase-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel = document.getElementById('panel-'+id);
+  panel.classList.add('active');
+  panel.querySelectorAll('.comp-row').forEach((el,i)=>{
+    el.classList.remove('visible');
+    setTimeout(()=>el.classList.add('visible'), i*65);
+  });
+}
+
+// Intersection observer
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'), parseInt(e.target.dataset.delay)||0);
+  });
+},{threshold:0.1});
+document.querySelectorAll('.comp-row,.step-item,.peri-card,.stat-item').forEach((el,i)=>{
+  el.dataset.delay = (i%6)*80;
+  obs.observe(el);
+});
+
+// Counter
+function animCount(el,target){
+  let c=0;const iv=setInterval(()=>{c=Math.min(c+target/50,target);el.textContent=Math.round(c)+(target>=40?'+':'');if(c>=target)clearInterval(iv);},25);
+}
+new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('[data-target]').forEach(n=>animCount(n,+n.dataset.target));}});},{threshold:.5}).observe(document.querySelector('.stats-bar'));
+
+// Init gaming panel
+setTimeout(()=>document.querySelectorAll('#panel-gaming .comp-row').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*70)),600);
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}});
+});
+</script>
+</body>
+</html>
